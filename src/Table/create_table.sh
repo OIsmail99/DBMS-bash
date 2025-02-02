@@ -45,20 +45,23 @@ if [[ $createField =~ ^[Cc][Rr][Ee][Aa][Tt][Ee]$ ]]; then
         
         if(primaryKeyConstraint ~ /^[Pp][Rr][Ii][Mm][Aa][Rr][Yy][[:space:]]+[Kk][Ee][Yy]$/ && pkStatus == 0){
         pkStatus=1
-        line = line columnName ":" dataType ":PRIMARY KEY , "
+        line = line columnName ":" dataType ":PK,"
         } 
        else if(primaryKeyConstraint ~ /^[Pp][Rr][Ii][Mm][Aa][Rr][Yy][[:space:]]+[Kk][Ee][Yy]$/){
        line=""
        break
         }
+        else if (i!=NF){
+        line = line columnName ":" dataType  ","
+        }
         else{
-        line = line columnName ":" dataType " , "
+        line = line columnName ":" dataType
         }
         }
         }
 
         END{
-        if(line!="")print line
+        if(line!="")print substr(line,1,length(line)-1)
         }'>$tableName
         
         if [[ ! -s $tableName ]];then
