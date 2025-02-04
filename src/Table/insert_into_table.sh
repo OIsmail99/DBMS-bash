@@ -1,7 +1,4 @@
 #!/usr/bin/bash
-
-
-
 read -p "Enter a SQL query:   " input
 standardInput=$(echo $input|sed 's/[(),]/ & /g; s/  */ /g')
 
@@ -162,3 +159,5 @@ if [[ $insertField =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
         fi
 fi        
     fi    
+
+src/App/main_menu.sh

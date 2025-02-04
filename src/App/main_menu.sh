@@ -7,9 +7,11 @@ while true; do
     case $choice in
         1)
             src/App/sub_menu.sh
+            exit 0
             ;;
         2)
             src/App/Manual.sh
+            exit 0
             ;;
         3)
             echo "Exiting..."

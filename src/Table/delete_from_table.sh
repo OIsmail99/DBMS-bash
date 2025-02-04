@@ -90,3 +90,5 @@ $col != val { print }    # Only print non-matching rows
 ' "$table_name" > tmpfile && mv tmpfile "$table_name"
 
 echo "Deleted records where $col_name = '$value' from '$table_name'"
+
+src/App/main_menu.sh
