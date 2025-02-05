@@ -70,7 +70,7 @@ if [[ $insertField =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
         
         
        if (userColumnsCount!=userValuesCount){
-       print "Error: Number of columns and values do not match"
+       print "Error: Number of columns and values do not match" > "/dev/stderr"
        exit 1
        }
          for(i=1;i<=userColumnsCount;i++){
@@ -89,7 +89,7 @@ if [[ $insertField =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
             record[userColumnsArray[i]]= tolower(userValuesArray[i])
             }
             else{
-             print "ERROR: Expected BOOLEAN but got : " userValuesArray[i]
+             print "ERROR: Expected BOOLEAN but got : " userValuesArray[i] > "/dev/stderr"
              exit 1
             }
             }
@@ -99,7 +99,7 @@ if [[ $insertField =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
             record[userColumnsArray[i]]= userValuesArray[i]
             }
             else{
-             print "ERROR: Expected INT but got : " userValuesArray[i]
+             print "ERROR: Expected INT but got : " userValuesArray[i] > "/dev/stderr"
              exit 1
             }
             }
@@ -109,7 +109,7 @@ if [[ $insertField =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
             record[userColumnsArray[i]]= userValuesArray[i]
             }
             else{
-             print "ERROR: Invalid input. Expected a non-null value"
+             print "ERROR: Invalid input. Expected a non-null value" > "/dev/stderr"
              exit 1
             }
             }

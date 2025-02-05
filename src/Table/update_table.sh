@@ -74,13 +74,13 @@ BEGIN {
     }
     # Validate condition operator
     if (conditionOperator != "==" && conditionOperator != "!=" && conditionOperator != ">" && conditionOperator != "<") {
-        print "Error: Invalid condition operator. Use ==, !=, >, or <."
+        print "Error: Invalid condition operator. Use ==, !=, >, or <." > "/dev/stderr"
         exit 1
     }
 }
 NR == 1 {
     # Print the header (metadata)
-    print $0
+    print $0 
     next
 }
 {

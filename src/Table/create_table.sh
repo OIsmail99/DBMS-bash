@@ -40,6 +40,7 @@ if [[ $createField =~ ^[Cc][Rr][Ee][Aa][Tt][Ee]$ ]]; then
         primaryKeyConstraint=items[3] " " items[4]
 
         if (dataType != "INT" && dataType != "STRING"  && dataType != "BOOLEAN" ){
+        print "Error: Invalid data type " dataType > "/dev/stderr"
         exit 1
         }
         

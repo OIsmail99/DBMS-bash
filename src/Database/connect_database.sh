@@ -20,7 +20,10 @@ fi
 if [[ $createField =~ ^[Uu][Ss][Ee]]$ ]]; then
     if [[ $dataBaseField =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]];then
         cd ../../data/$dataBaseName
-    fi
     
+    else
+    echo "Error: Invalid SQL syntax. Please try again."
+    fi
+    echo "Error: Invalid SQL syntax. Please try again."
     
 fi    
