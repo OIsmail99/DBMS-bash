@@ -1,10 +1,4 @@
 #!/usr/bin/bash
-
-
-
-
-    
-
     databaseName=$1
 
 
@@ -17,8 +11,4 @@
     echo "Database '$databaseName' dropped successfully."
    
     fi
-
-
-
-
 ./App/main_menu.sh

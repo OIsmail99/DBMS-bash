@@ -1,85 +1,108 @@
 #!/usr/bin/bash
 
-# Function to display error messages and exit
-error_exit() {
-    echo "Error: $1"
-    exit 1
-}
-
-# Read the current database name
 currentDatabase=$(cat ../data/current_database.txt 2>/dev/null)
 
-# Validate if a database is selected
+
 if [[ ! -f "../data/current_database.txt" ]]; then
-    error_exit "No database selected."
+    echo "No database selected."
+    exit 1
 fi
 
-# Read the SQL query from arguments
+
 input=$*
 echo "Input: $input"
 
-# Tokenize the input by adding spaces around parentheses and commas
+
 standardInput=$(echo "$input" | sed 's/[=]/ & /g; s/  */ /g')
 
 # Parse the SQL query
+deleteField=$(echo "$standardInput" | cut -d" " -f1)
 fromField=$(echo "$standardInput" | cut -d" " -f2)
 tableName=$(echo "$standardInput" | cut -d" " -f3)
-condition=$(echo "$standardInput" | grep -oP '(?<=WHERE\s).+')
+
+whereField=$(echo "$standardInput" | cut -d" " -f4)
+columnField=$(echo "$standardInput" | cut -d" " -f5)
+equalField=$(echo "$standardInput" | cut -d" " -f6)
+valueField=$(echo "$standardInput" | cut -d" " -f7)
 
 # Validate DELETE FROM command
 if [[ $deleteField =~ ^[Dd][Ee][Ll][Ee][Tt][Ee]$ ]]; then
     if [[ $fromField =~ ^[Ff][Rr][Oo][Mm]$ ]]; then
         # Validate table existence
         if [[ ! -f "../data/$currentDatabase/$tableName" ]]; then
-            error_exit "Table '$tableName' does not exist."
+            echo "Table '$tableName' does not exist."
+            exit 1
         fi
 
-        # Validate condition format
-        if [[ -z "$condition" ]]; then
-            error_exit "Condition is missing. Use: DELETE FROM tableName WHERE X=Y"
+        # Validate WHERE clause
+        if [[ ! $whereField =~ ^[Ww][Hh][Ee][Rr][Ee]$ ]]; then
+            echo "WHERE clause is missing. Use: DELETE FROM tableName WHERE column=value"
+            exit 1
         fi
 
-        # Extract column name and value from the condition
-        if [[ "$condition" != *=* ]]; then
-            error_exit "Condition must be in 'column=value' format."
+        # Validate column name
+        if [[ ! $columnField =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+            echo "Invalid column name."
+            exit 1
         fi
 
-        IFS='=' read -r col_name value <<< "$condition"
-        col_name=$(tr -d '[:space:]' <<< "$col_name")  # Remove whitespace from column name
-        value=$(echo "$value" | sed -e "s/^['\"]//" -e "s/['\"]$//")  # Remove quotes
-
-        # Read metadata from the table file
-        metaData=$(head -1 "../data/$currentDatabase/$tableName")
-
-        # Get column index from metadata
-        IFS=',' read -ra columns <<< "$metaData"
-
-        col_index=-1
-        for i in "${!columns[@]}"; do
-            IFS=':' read -r name _ <<< "${columns[i]}"
-            if [[ "$name" == "$col_name" ]]; then
-                col_index=$((i + 1))  # AWK uses 1-based indexing
-                break
-            fi
-        done
-
-        if [[ $col_index -eq -1 ]]; then
-            error_exit "Column '$col_name' not found."
+        # Validate equal sign
+        if [[ ! $equalField =~ ^[=]$ ]]; then
+            echo "Invalid equal sign. Use: DELETE FROM tableName WHERE column=value"
+            exit 1
         fi
 
-        # Use AWK to filter and delete rows
-        awk -v col="$col_index" -v val="$value" '
-        BEGIN { FS=":"; OFS=":" }
-        NR == 1 { print; next }  # Keep header
-        $col != val { print }    # Only print non-matching rows
-        ' "../data/$currentDatabase/$tableName" > tmpfile && mv tmpfile "../data/$currentDatabase/$tableName"
+        # Validate value
+        if [[ -z $valueField ]]; then
+            echo "Value cannot be empty."
+            exit 1
+        fi
 
-        echo "Deleted records where $col_name = '$value' from '$tableName'."
+        # Read metadata (first line of the table file)
+        metadata=$(head -1 "../data/$currentDatabase/$tableName")
+
+        # Check if the column exists in the metadata
+        if ! echo "$metadata" | grep -q "$columnField"; then
+            echo "Column '$columnField' does not exist in table '$tableName'."
+            exit 1
+        fi
+
+        # Determine the column index
+        columnIndex=$(echo "$metadata" | awk -F'[:,]' -v column="$columnField" '{
+            for (i = 1; i <= NF; i++) {
+                if ($i == column) {
+                    print int((i + 2) / 3)  # Calculate the column index
+                    break
+                }
+            }
+        }')
+
+        if [[ -z $columnIndex ]]; then
+            echo "Column '$columnField' not found in table '$tableName'."
+            exit 1
+        fi
+
+        # Delete the record
+        awk -F'|' -v columnIndex="$columnIndex" -v value="$valueField" '
+        NR == 1 { print }  # Print the metadata line
+        NR > 1 {
+            split($columnIndex, parts, ":")  # Split the column value to extract the actual value
+            if (parts[1] != value) {
+                print
+            }
+        }
+        ' "../data/$currentDatabase/$tableName" > "../data/$currentDatabase/$tableName.tmp"
+
+        mv "../data/$currentDatabase/$tableName.tmp" "../data/$currentDatabase/$tableName"
+
+        echo "Record deleted successfully."
     else
-        error_exit "Invalid command. Expected 'FROM'."
+        echo "Syntax error. Use: DELETE FROM tableName WHERE column=value"
+        exit 1
     fi
 else
-    error_exit "Invalid command. Expected 'DELETE'."
+    echo "Invalid command. Use: DELETE FROM tableName WHERE column=value"
+    exit 1
 fi
 
 # Return to the submenu

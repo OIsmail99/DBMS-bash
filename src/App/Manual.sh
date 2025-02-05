@@ -7,7 +7,6 @@ echo "To insert into a table: INSERT INTO table_name (column1,column2, ...) VALU
 echo "To update a table: UPDATE table_name SET column1_name = value1 WHERE CONDITION .. ONLY ONE UPDATE AT A TIME IS ALLOWED"
 echo "To select from a table: SELECT FROM table_name"
 echo "To delete from a table: DELETE FROM table_name WHERE condition"
-echo "To delete all the data from a table: DELETE FROM table_name"
 echo "To drop a table: DROP TABLE table_name"
 echo "To drop a database: DROP DATABASE database_name"
 echo "to show the tables: SHOW TABLES"

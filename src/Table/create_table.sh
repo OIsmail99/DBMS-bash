@@ -1,9 +1,9 @@
 #! /usr/bin/bash
 
-# Read the current database name
+
 currentDatabase=$(cat ../data/current_database.txt 2>/dev/null)
 
-# Validate if a database is selected
+
 if [[ ! -f "../data/current_database.txt" ]]; then
     echo "Error: No database selected."
     ./App/sub_menu.sh
@@ -18,28 +18,28 @@ tableField=$(echo "$standardInput" | cut -d" " -f2)
 tableName=$(echo "$standardInput" | cut -d" " -f3)
 columns=$(echo "$standardInput" | sed 's/.*(//;s/).*//')
 
-# Validate CREATE TABLE command
+
 if [[ $createField =~ ^[Cc][Rr][Ee][Aa][Tt][Ee]$ ]]; then
     if [[ $tableField =~ ^[Tt][Aa][Bb][Ll][Ee]$ ]]; then
-        # Validate table name
+        
         if [[ ! $tableName =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
             echo "Error: Invalid table name."
             exit 1
         fi
 
-        # Check if table already exists
+        
         if [[ -f "../data/$currentDatabase/$tableName" ]]; then
             echo "Error: Table '$tableName' already exists."
             exit 1
         fi
 
-        # Validate columns
+        
         if [[ -z $columns ]]; then
             echo "Error: No columns specified."
             exit 1
         fi
 
-        # Process columns and generate metadata
+        
         echo "$columns" | awk -F' , ' '
         BEGIN {
             pkStatus = 0

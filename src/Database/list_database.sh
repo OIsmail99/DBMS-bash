@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-
 if [[ $(ls -A ../data | wc -l) -eq 0 ]]; then
     echo "Directory is empty"
 else
