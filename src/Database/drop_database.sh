@@ -25,7 +25,7 @@ while true; do
 
     
     if [ ! -d "$databaseName" ]; then
-        echo "Error: Database '$databaseName' does not exist."
+        echo "Error: Database '$databaseName' does not exist, try again"
         continue
     fi
 

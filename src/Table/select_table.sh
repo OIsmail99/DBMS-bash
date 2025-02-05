@@ -15,6 +15,6 @@ if [[ ! -f "$table_name" ]]; then
     exit 1
 fi
 
-tail -n +2 "$table_name"
+cat "$table_name"
 
 src/App/main_menu.sh

@@ -11,7 +11,13 @@ while true; do
 
     
     if [[ "$firstWord" =~ ^[Ss][Hh][Oo][Ww]$ ]]; then
-        /src/Database/list_database.sh
+        if [[ "$secondWord" =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee][Ss]$ ]]; then
+            /src/Database/list_database.sh
+            break
+        else
+            /src/Table/list_table.sh
+            break
+        fi
         break
     elif [[ "$firstWord" =~ ^[Dd][Rr][Oo][Pp]$ ]]; then
         /src/Database/drop_database.sh
