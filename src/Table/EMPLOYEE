@@ -1,0 +1,12 @@
+ID:INT:PK,hasBrain:BOOLEAN
+NULL:true
+30:NULL
+ERROR: Primary key violation. 
+31:NULL
+32:NULL
+ERROR: Primary key violation. 
+35:NULL
+ERROR: Primary key violation. 
+60:NULL
+90:NULL
+ERROR: Primary key violation.60 is already in the database
