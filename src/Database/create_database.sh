@@ -1,26 +1,19 @@
 #! /usr/bin/bash
 
-read -p "Enter a SQL query:   " input
-standardInput=$(echo $input|sed 's/[(),]/ & /g; s/  */ /g')
-createField=$(echo $standardInput |cut -d" " -f1)
-dataBaseField=$(echo $standardInput |cut -d" " -f2)
-dataBaseName=$(echo $standardInput |cut -d" " -f3)
-
-
-if [[  "$standardInput" =~ \)$ ]];then
-echo "Error: The query must end with a closing parenthesis"
-    exit 1
+if [[ ! $1 =~ ^[a-zA-Z_][a-zA-Z0-9_]*$ ]]; then
+    echo "Invalid database name"
+    ./App/sub_menu.sh
 fi
 
-if [[ $standardInput =~ \).*[^[:space:]] ]]; then
-echo "Error: Unexpected characters after closing parenthesis."
-exit 1
+cd ../data
+if [[  -d $1  ]]; then
+    echo "Database already exists"
+    cd ../src
+    ./App/sub_menu.sh
+else
+    cd ../src
+    mkdir ../data/$1
+    echo "Database created successfully"
+    ./App/sub_menu.sh
 fi
 
-if [[ $createField =~ ^[Cc][Rr][Ee][Aa][Tt][Ee]$ ]]; then
-    if [[ $dataBaseField =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]];then
-        mkdir ../../data/$dataBaseName
-    fi
-    
-    
-fi    

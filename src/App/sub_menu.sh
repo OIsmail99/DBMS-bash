@@ -8,43 +8,56 @@ while true; do
    
     firstWord=$(echo "$standardInput" | cut -d" " -f1)
     secondWord=$(echo "$standardInput" | cut -d" " -f2)
+    thirdWord=$(echo "$standardInput" | cut -d" " -f3)
 
     
     if [[ "$firstWord" =~ ^[Ss][Hh][Oo][Ww]$ ]]; then
         if [[ "$secondWord" =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee][Ss]$ ]]; then
-            /src/Database/list_database.sh
+            ./Database/list_database.sh
             break
         else
-            /src/Table/list_table.sh
+            ./Table/list_table.sh
             break
         fi
         break
     elif [[ "$firstWord" =~ ^[Dd][Rr][Oo][Pp]$ ]]; then
-        /src/Database/drop_database.sh
+        ./Database/drop_database.sh
         break
     elif [[ "$firstWord" =~ ^[Ss][Ee][Ll][Ee][Cc][Tt]$ ]]; then
-        /src/Table/select_table.sh
+        ./Table/select_table.sh
         break
     elif [[ "$firstWord" =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
-        /src/Table/insert_table.sh
+        ./Table/insert_table.sh
         break
     elif [[ "$firstWord" =~ ^[Uu][Pp][Dd][Aa][Tt][Ee]$ ]]; then
-        /src/Table/update_table.sh
+        ./Table/update_table.sh
         break
     elif [[ "$firstWord" =~ ^[Dd][Ee][Ll][Ee][Tt][Ee]$ ]]; then
-        /src/Table/delete_table.sh
+        ./Table/delete_table.sh
         break
     elif [[ "$firstWord" =~ ^[Cc][Rr][Ee][Aa][Tt][Ee]$ ]]; then
         if [[ "$secondWord" =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]]; then
-            /src/Database/create_database.sh
+            ./Database/create_database.sh $thirdWord
             break
         else
-            /src/Table/create_table.sh
+            ./Table/create_table.sh
             break
         fi
+    
+    elif [[ "$firstWord" =~ ^[Uu][Ss][Ee]$ ]]; then
+        if [[ "$secondWord" =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]]; then
+            ./Database/connect_database.sh $thirdWord
+            break
+        else
+            echo "Error: Invalid SQL syntax. Please try again."
+        fi
+
     else
         echo "Error: Invalid SQL syntax. Please try again."
     fi
+
+    
+
 done
 
 

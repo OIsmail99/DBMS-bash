@@ -12,8 +12,12 @@ echo "To drop a table: DROP TABLE table_name"
 echo "To drop a database: DROP DATABASE database_name"
 echo "to show the tables: SHOW TABLES"
 
-read -p "Press 1 to go back to the main menu: " choice
-while [ $choice -ne 1 ]; do
-    read -p "Invalid choice. Press 1 to go back to the main menu: " choice
+while true; do
+    read -p "Press 1 to go back to the main menu: " choice
+    if [ $choice -eq 1 ]; then
+        break
+    else
+        echo "Invalid choice. Please enter 1."
+    fi
 done
-src/App/main_menu.sh
+./App/main_menu.sh

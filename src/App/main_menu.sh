@@ -1,16 +1,16 @@
 #!/bin/bash
 while true; do
-    
+    echo "Welcome to the Main Menu"
     echo "Press 1 to navigate, 2 to see the valid SQL syntax, 3 to exit"
     read -p "Enter your choice: " choice
 
     case $choice in
         1)
-            src/App/sub_menu.sh
+            ./App/sub_menu.sh
             exit 0
             ;;
         2)
-            src/App/Manual.sh
+            ./App/Manual.sh
             exit 0
             ;;
         3)
