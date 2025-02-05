@@ -21,13 +21,13 @@ while true; do
         fi
         break
     elif [[ "$firstWord" =~ ^[Dd][Rr][Oo][Pp]$ ]]; then
-        ./Database/drop_database.sh
+        ./Database/drop_database.sh $thirdWord
         break
     elif [[ "$firstWord" =~ ^[Ss][Ee][Ll][Ee][Cc][Tt]$ ]]; then
-        ./Table/select_table.sh
+        ./Table/select_table.sh $standardInput
         break
     elif [[ "$firstWord" =~ ^[Ii][Nn][Ss][Ee][Rr][Tt]$ ]]; then
-        ./Table/insert_table.sh
+        ./Table/insert_into_table.sh $standardInput
         break
     elif [[ "$firstWord" =~ ^[Uu][Pp][Dd][Aa][Tt][Ee]$ ]]; then
         ./Table/update_table.sh
@@ -40,10 +40,10 @@ while true; do
             ./Database/create_database.sh $thirdWord
             break
         else
-            ./Table/create_table.sh
+            ./Table/create_table.sh $standardInput
             break
         fi
-    
+
     elif [[ "$firstWord" =~ ^[Uu][Ss][Ee]$ ]]; then
         if [[ "$secondWord" =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]]; then
             ./Database/connect_database.sh $thirdWord

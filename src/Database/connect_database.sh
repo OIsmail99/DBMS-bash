@@ -1,29 +1,30 @@
 #! /usr/bin/bash
+#why does $1 not written in curret_database.txt
 
-read -p "Enter a SQL query:   " input
-standardInput=$(echo $input|sed 's/[(),]/ & /g; s/  */ /g')
-createField=$(echo $standardInput |cut -d" " -f1)
-dataBaseField=$(echo $standardInput |cut -d" " -f2)
-dataBaseName=$(echo $standardInput |cut -d" " -f3)
-
-
-if [[  "$standardInput" =~ \)$ ]];then
-echo "Error: The query must end with a closing parenthesis"
-    exit 1
-fi
-
-if [[ $standardInput =~ \).*[^[:space:]] ]]; then
-echo "Error: Unexpected characters after closing parenthesis."
-exit 1
-fi
-
-if [[ $createField =~ ^[Uu][Ss][Ee]]$ ]]; then
-    if [[ $dataBaseField =~ ^[Dd][Aa][Tt][Aa][Bb][Aa][Ss][Ee]$ ]];then
-        cd ../../data/$dataBaseName
-    
+    if [[ -d ../data/$1 ]]; then
+        cd ../data/$1
+        echo "Database $1 selected"
+        echo $PWD
+        touch ../current_database.txt
+        echo $1 > ../current_database.txt
     else
-    echo "Error: Invalid SQL syntax. Please try again."
+        echo "Error: Database $1 does not exist."
     fi
-    echo "Error: Invalid SQL syntax. Please try again."
-    
-fi    
+
+cd ../../src
+./App/sub_menu.sh
+ 
+# if [[ -d ../data/$1 ]]; then
+#     cd ../data/$1
+#     echo "Database $1 selected"
+#     echo $PWD
+#     cd ../../src
+#     ../../App/sub_menu.sh
+# else
+#     echo "Error: Database $1 does not exist."
+#     cd ../../src
+#     ./App/sub_menu.sh
+# fi
+
+
+#at src/ again

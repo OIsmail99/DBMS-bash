@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+currentDatabase=$(cat data/current_database.txt 2>/dev/null)
+
 while true; do
     
     read -p "SQL> " input

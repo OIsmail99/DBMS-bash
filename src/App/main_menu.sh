@@ -1,5 +1,6 @@
 #!/bin/bash
 while true; do
+    rm -f ../data/current_database.txt
     echo "Welcome to the Main Menu"
     echo "Press 1 to navigate, 2 to see the valid SQL syntax, 3 to exit"
     read -p "Enter your choice: " choice
