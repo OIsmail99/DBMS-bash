@@ -4,7 +4,7 @@
 currentDatabase=$(cat ../data/current_database.txt 2>/dev/null)
 
 # Validate if a database is selected
-if [[ ! -f "../data/currentDatabase.txt" ]]; then
+if [[ ! -f "../data/current_database.txt" ]]; then
     echo "Error: No database selected."
     ./App/sub_menu.sh
     exit 1

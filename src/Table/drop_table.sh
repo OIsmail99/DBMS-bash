@@ -1,21 +1,28 @@
 #!/bin/bash
-#validate drop table command (DROP table_name)
-#read the sql command
-read -p "SQL> " sql_cmd
-#validate the sql syntax
-if [[ ! "$sql_cmd" =~ ^[[:space:]]*DROP[[:space:]]+TABLE[[:space:]]+([^[:space:];]+)[[:space:]]*$ ]]; then
-    echo "Error: Invalid SQL syntax. Use: DROP TABLE table"
+currentDatabase=$(cat ../data/current_database.txt 2>/dev/null)
+# Read the current database name
+
+# Capture full user input
+
+table_name=$1
+# Check if a database is selected
+if [[ ! -f "../data/current_database.txt" ]]; then
+    echo "Error: No database selected."
     exit 1
 fi
 
-table_name=$(sed -E 's/^\s*DROP\s+TABLE\s+([^ ;]+).*/\1/i' <<< "$sql_cmd")
+
+#validate the sql syntax
 
 
-if [[ ! -f "$table_name" ]]; then
+
+
+if [[ ! -f "../data/$currentDatabase/$table_name" ]]; then
     echo "Error: Table '$table_name' does not exist"
     exit 1
 fi
 
-rm -rf "$table_name"
+rm -rf "../data/$currentDatabase/$table_name"
+
 echo "Table '$table_name' dropped successfully"
 exit 0

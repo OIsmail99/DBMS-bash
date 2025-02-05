@@ -1,54 +1,45 @@
 #!/bin/bash
 
 # Read the current database name
-currentDatabase=$(cat data/current_database.txt 2>/dev/null)
+currentDatabase=$(cat ../data/current_database.txt 2>/dev/null)
 
-input=$*
+# Capture full user input
+input="$*"
 
 # Check if a database is selected
 if [[ ! -f "../data/current_database.txt" ]]; then
     echo "Error: No database selected."
     exit 1
 fi
-echo $input
-# Parse input arguments, validate the * as well
-standardInput=$(echo "$input" | sed 's/[(),]/ & /g; s/  */ /g')
-echo $standardInput
 
-selectField=$(echo "$standardInput" | cut -d" " -f1)
-astresk=$(echo "$standardInput" | cut -d" " -f2)
+# Normalize input spacing and extract components
+standardInput="$(echo "$input" | sed 's/[(),]/ & /g; s/  */ /g')"
 
-fromField=$(echo "$standardInput" | cut -d" " -f3)
-table_name=$(echo "$standardInput" | cut -d" " -f4)
+# Extracting keywords and table name
+selectField=$(echo "$standardInput" | awk '{print $1}')
+fromField=$(echo "$standardInput" | awk '{print $2}')
+table_name=$(echo "$standardInput" | awk '{print $3}')
 
-echo $selectField
-echo $astresk
-echo $fromField
-echo $table_name
-
-# Validate SELECT command
-
+# Validate SELECT command syntax
 if [[ $selectField =~ ^[Ss][Ee][Ll][Ee][Cc][Tt]$ ]]; then
-    if [[ $astresk =~ ^\*$ ]]; then
-        if [[ $fromField =~ ^[Ff][Rr][Oo][Mm]$ ]]; then
+    if [[ $fromField =~ ^[Ff][Rr][Oo][Mm]$ ]]; then
+        if [[ -n $table_name ]]; then
             if [[ -f "../data/$currentDatabase/$table_name" ]]; then
-                echo "Table '$table_name' exists"
+                cat "../data/$currentDatabase/$table_name"  # Display table content
             else
                 echo "Error: Table '$table_name' does not exist"
+
                 exit 1
             fi
         else
-            echo "Error: Invalid syntax."
+            echo "Error: Missing table name."
             exit 1
         fi
     else
-        echo "Error: Invalid syntax."
+        echo "Error: Invalid syntax. Expected 'FROM'."
         exit 1
     fi
 else
-    echo "Error: Invalid syntax."
+    echo "Error: Invalid syntax. Expected 'SELECT'."
     exit 1
 fi
-
-# Display the table content
-cat "../data/$currentDatabase/$table_name"
